@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>iWrapper Ujian</title>
+
+<style>
+:root{
+  --app-h: 100vh;
+  --safe-top: env(safe-area-inset-top);
+  --safe-right: env(safe-area-inset-right);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+}
+
+html, body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  overscroll-behavior:none;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  font-family:'Segoe UI', Arial, sans-serif;
+}
+
+body{
+  position:fixed;
+  inset:0;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+#app{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+iframe{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  width:100dvw;
+  height:var(--app-h);
+  border:none;
+  display:none;
+  background:#fff;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:
+    calc(16px + var(--safe-top))
+    calc(16px + var(--safe-right))
+    calc(16px + var(--safe-bottom))
+    calc(16px + var(--safe-left));
+  z-index:9999;
+  box-sizing:border-box;
+}
+
+.warning-bg{
+  background:rgba(0,0,0,0.6);
+}
+
+.card{
+  background:white;
+  width:min(500px, calc(100vw - 32px));
+  max-height:calc(var(--app-h) - 32px);
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 12px 35px rgba(0,0,0,0.25);
+  text-align:center;
+  animation:fadeIn 0.35s ease-out;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  box-sizing:border-box;
+}
+
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+h2, h3{
+  margin-top:0;
+  color:#1e3c72;
+}
+
+.checklist{
+  text-align:left;
+  margin-top:15px;
+}
+
+.checklist label{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  margin-bottom:12px;
+  font-size:14px;
+  line-height:1.4;
+}
+
+.checklist input{
+  margin-top:3px;
+  flex:0 0 auto;
+}
+
+.info-box{
+  background:#f0f4ff;
+  padding:12px;
+  border-radius:8px;
+  font-size:14px;
+  margin-top:15px;
+  text-align:left;
+}
+
+button{
+  min-height:44px;
+  padding:12px 25px;
+  margin-top:20px;
+  font-size:15px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:#1e3c72;
+  color:white;
+  transition:0.25s;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+button:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+
+button:hover:not(:disabled){
+  background:#16325c;
+}
+
+.warning-card{
+  background:#fff3f3;
+  border-left:5px solid red;
+}
+
+.hidden{
+  display:none !important;
+}
+
+@media (max-width:480px){
+  .card{
+    padding:20px;
+    border-radius:12px;
+    width:min(500px, calc(100vw - 24px));
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .info-box,
+  .checklist label{
+    font-size:13px;
+  }
+
+  button{
+    width:100%;
+    font-size:15px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- PERSIAPAN -->
+  <div id="prepOverlay" class="overlay">
+    <div class="card prep-card">
+      <h2 class="prep-title">📝 Persiapan Sebelum Ujian</h2>
+
+      <div class="info-box">
+        Pastikan Anda sudah menerima <b>Nomor Peserta</b> dari sekolah sebagai data untuk login ujian.<br><br>
+        Jangan menekan tombol <b>"Mulai Ujian"</b> apabila Anda belum menerima Nomor Peserta tersebut karena dapat menyebabkan akses ujian terkunci.
+      </div>
+
+      <div class="checklist">
+        <p class="check-title">✅ Checklist Persiapan Ujian</p>
+
+        <label>
+          <input type="checkbox" class="prepCheck">
+          Matikan semua notifikasi aplikasi (WhatsApp, Telegram, Instagram, dll)
+        </label>
+
+        <label>
+          <input type="checkbox" class="prepCheck">
+          Aktifkan Mode <b>Jangan Ganggu (Do Not Disturb)</b> pada perangkat Anda
+        </label>
+
+        <label>
+          <input type="checkbox" class="prepCheck">
+          Atur <b>durasi layar 30 menit</b> atau lebih
+        </label>
+
+        <label>
+          <input type="checkbox" class="prepCheck">
+          Matikan fitur <b>rotasi layar otomatis</b>
+        </label>
+
+        <label>
+          <input type="checkbox" class="prepCheck">
+          Jangan menerima atau melakukan panggilan telepon selama ujian, kecuali sangat penting
+        </label>
+
+        <label>
+          <input type="checkbox" class="prepCheck">
+          Jangan membuka aplikasi lain selama ujian berlangsung
+        </label>
+      </div>
+
+      <button id="startBtn" disabled>🚀 Mulai Ujian</button>
+    </div>
+  </div>
+
+  <!-- WARNING -->
+  <div id="warningOverlay" class="overlay warning-bg hidden">
+    <div class="card warning-card">
+      <h3>Peringatan Sistem</h3>
+      <p id="warningText"></p>
+      <p>Sisa kesempatan: <strong><span id="chanceLeft"></span></strong></p>
+      <button id="continueBtn">Lanjutkan</button>
+    </div>
+  </div>
+
+  <iframe id="examFrame" allow="fullscreen"></iframe>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfBvcwcwn7ypYuMtxG9dUx57MpQYRBG7LRGvFFQyYoJ6TCSrQ/viewform?usp=publish-editor";
+const SUBJECT_CODE = "MTKTINGKATLANJUT1226";
+const MAX_VIOLATION = 3;
+
+/* ================= STATE ================= */
+let violation = parseInt(localStorage.getItem(SUBJECT_CODE + "_v") || "0", 10);
+let logData = JSON.parse(localStorage.getItem(SUBJECT_CODE + "_log") || "[]");
+let started = false;
+let leaveTime = null;
+let graceUsed = false;
+let initialWidth = null;
+
+/* ================= ELEMENTS ================= */
+const checks = document.querySelectorAll(".prepCheck");
+const startBtn = document.getElementById("startBtn");
+const prepOverlay = document.getElementById("prepOverlay");
+const warningOverlay = document.getElementById("warningOverlay");
+const examFrame = document.getElementById("examFrame");
+const continueBtn = document.getElementById("continueBtn");
+
+/* ================= VIEWPORT HEIGHT FIX (iPhone friendly) ================= */
+function setAppHeight() {
+  document.documentElement.style.setProperty("--app-h", window.innerHeight + "px");
+}
+setAppHeight();
+window.addEventListener("resize", setAppHeight);
+window.addEventListener("orientationchange", setAppHeight);
+
+/* ================= FULLSCREEN ================= */
+async function enterFullscreen() {
+  const el = document.documentElement;
+
+  try {
+    if (el.requestFullscreen) {
+      await el.requestFullscreen();
+      return true;
+    }
+    if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+      return true;
+    }
+  } catch (e) {
+    // fallback tetap jalan
+  }
+  return false;
+}
+
+/* ================= CHECKLIST ================= */
+checks.forEach(c => {
+  c.addEventListener("change", () => {
+    startBtn.disabled = ![...checks].every(x => x.checked);
+  });
+});
+
+/* ================= LOG SYSTEM ================= */
+function addLog(reason, duration = 0) {
+  const now = new Date();
+  logData.push({
+    time: now.toLocaleString(),
+    reason: reason,
+    duration: duration,
+    total: violation
+  });
+
+  if (logData.length > 50) {
+    logData.shift();
+  }
+
+  localStorage.setItem(SUBJECT_CODE + "_log", JSON.stringify(logData));
+}
+
+/* ================= SAVE VIOLATION ================= */
+function saveViolation() {
+  localStorage.setItem(SUBJECT_CODE + "_v", String(violation));
+
+  if (violation >= MAX_VIOLATION) {
+    localStorage.setItem(SUBJECT_CODE + "_blocked", "1");
+    window.location.href = "blocked.html?mapel=" + encodeURIComponent(SUBJECT_CODE);
+  }
+}
+
+/* ================= WARNING ================= */
+function showWarning(msg) {
+  document.getElementById("warningText").innerText = msg;
+  document.getElementById("chanceLeft").innerText = Math.max(MAX_VIOLATION - violation, 0);
+  warningOverlay.classList.remove("hidden");
+}
+
+function closeWarning() {
+  warningOverlay.classList.add("hidden");
+}
+
+function triggerViolation(reason, duration = 0) {
+  violation++;
+  addLog(reason, duration);
+  saveViolation();
+
+  if (violation < MAX_VIOLATION) {
+    showWarning(reason);
+  }
+}
+
+/* ================= START ================= */
+async function startExam() {
+  const fsOk = await enterFullscreen();
+
+  prepOverlay.classList.add("hidden");
+  examFrame.src = FORM_URL;
+  examFrame.style.display = "block";
+  started = true;
+
+  localStorage.setItem(SUBJECT_CODE + "_started", "1");
+  initialWidth = window.innerWidth;
+
+  // optional: kalau fullscreen tidak aktif, tetap jalan normal
+  // fsOk hanya indikasi, tidak menghentikan ujian
+}
+
+startBtn.addEventListener("click", startExam);
+continueBtn.addEventListener("click", closeWarning);
+
+/* ================= RELOAD SAFE ================= */
+if (
+  localStorage.getItem(SUBJECT_CODE + "_started") === "1" &&
+  localStorage.getItem(SUBJECT_CODE + "_blocked") !== "1"
+) {
+  prepOverlay.classList.add("hidden");
+  examFrame.src = FORM_URL;
+  examFrame.style.display = "block";
+  started = true;
+  initialWidth = window.innerWidth;
+}
+
+/* ================= TAB SWITCH DETECTION ================= */
+document.addEventListener("visibilitychange", function () {
+  if (!started) return;
+
+  if (document.hidden) {
+    leaveTime = Date.now();
+  } else if (leaveTime) {
+    const diff = (Date.now() - leaveTime) / 1000;
+
+    if (!graceUsed && diff < 4) {
+      graceUsed = true;
+      leaveTime = null;
+      return;
+    }
+
+    if (diff > 7) {
+      triggerViolation("Keluar dari halaman selama " + Math.round(diff) + " detik", Math.round(diff));
+    }
+
+    leaveTime = null;
+  }
+});
+
+/* ================= SPLIT SCREEN / RESIZE CHECK ================= */
+window.addEventListener("resize", function () {
+  setAppHeight();
+
+  if (!started) return;
+
+  if (initialWidth && Math.abs(window.innerWidth - initialWidth) > 200) {
+    triggerViolation("Terdeteksi kemungkinan split screen");
+  }
+});
+
+/* ================= RIGHT CLICK DISABLE ================= */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+/* ================= BLOCK CHECK ================= */
+if (localStorage.getItem(SUBJECT_CODE + "_blocked") === "1") {
+  window.location.href = "blocked.html?mapel=" + encodeURIComponent(SUBJECT_CODE);
+}
+</script>
+
+</body>
+</html>
